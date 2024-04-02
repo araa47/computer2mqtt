@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "computer2mqtt"
+version = "0.1.0"
+description = ""
+authors = ["Akshay <araa@connect.ust.hk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+paho-mqtt = "^2.0.0"
+pyyaml = "^6.0.1"
+
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+
+
+[tool.pyright]
+#TODO: switch to strict mode when we have time to fix all the errors
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+exclude = []
+
+
+[tool.isort]
+profile = "black"
+src_paths = "mac2mqttpy,tests"
+line_length = 80
+include_trailing_comma = true
+multi_line_output = 3
+
+[tool.ruff]
+# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
+lint.select = ["E", "F", "B"]
+exclude = ["__pycache__", ".git", ".venv"]
+lint.ignore = [
+  # Note that Ruff and Black treat line-length enforcement a little differently
+  "E501",
+]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

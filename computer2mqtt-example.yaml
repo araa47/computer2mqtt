@@ -1,0 +1,14 @@
+---
+# MQTT broker settings
+
+mqtt:
+    ip: 192.168.1.226
+    port: 1883
+    user: mac_mqtt
+    password: mac_mqtt_password
+
+
+commands:
+  # Example mac command to wake/sleep display
+    displaysleep: pmset displaysleepnow
+    displaywake: caffeinate -u -t 1
