@@ -7,8 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-paho-mqtt = "^2.0.0"
 pyyaml = "^6.0.1"
+aiomqtt = "^2.0.1"
 
 
 
