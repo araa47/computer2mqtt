@@ -56,4 +56,9 @@ Replace {device_name} with the name of your device from the previous step!
 
 # Running in the background
 
-WIP
+To run the script in the background, you can use the screen command. screen is a full-screen window manager that multiplexes a physical terminal between several processes.
+
+1. Start a new screen session with the command screen -S mysession.
+1. Run the script with the command python3 computer2mqtt/app.py.
+1. Detach from the screen session with the command Ctrl-a d.
+1. You can reattach to the session at any time with the command screen -r mysession. This will keep the script running in the background, even if you close the terminal.
