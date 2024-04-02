@@ -1,10 +1,15 @@
+import asyncio
 import os
 import re
-import subprocess
-from typing import Any, Dict
+import signal
+import sys
+from typing import TYPE_CHECKING, Any, Dict
 
-import paho.mqtt.client as mqtt
+import aiomqtt
 import yaml
+
+if TYPE_CHECKING or (sys.platform.lower() == "win32" or os.name.lower() == "nt"):
+    pass  # type: ignore
 
 
 class Config:
@@ -44,61 +49,66 @@ def get_hostname() -> str:
     return sanitized_hostname
 
 
-def run_command(command: str, *args: str) -> None:
-    """Executes the given command with the provided arguments."""
-    subprocess.run([command] + list(args), check=True)
+async def run_command(command: str, *args: str) -> None:
+    """Executes the given command with the provided arguments asynchronously."""
+    await asyncio.create_subprocess_exec(command, *args)
 
 
-def command_executor(config: Config, command_key: str) -> None:
+async def command_executor(config: Config, command_key: str) -> None:
     """Executes a command based on the key from the configuration."""
     command = config.commands.get(command_key)
     if command:
         command_list = command.split()
-        run_command(*command_list)
+        await run_command(*command_list)
     else:
         print(f"Command for '{command_key}' not found in the configuration.")
 
 
-def on_connect(
-    client: mqtt.Client, userdata: Any, flags: Dict[str, Any], rc: int
-) -> None:
-    """Callback for when the client receives a CONNACK response from the server."""
-    print(f"Connected with result code {rc}")
-    client.subscribe(f"mac2mqtt/{get_hostname()}/command/+")
+async def mqtt_client_task(config: Config):
+    """Task for running the MQTT client and handling messages."""
+    async with aiomqtt.Client(
+        config.ip,
+        username=config.user or "default_user",
+        password=config.password or "default_password",
+        port=config.port,
+    ) as client:
+        await client.subscribe(f"mac2mqtt/{get_hostname()}/command/#")
+        async for message in client.messages:
+            print(f"Received message: {str(message.topic)} => {str(message.payload)}")
+            topic_parts = str(message.topic).split("/")
+            if isinstance(message.payload, bytes):
+                payload = message.payload.decode()
+            else:
+                payload = str(message.payload)
+
+            if len(topic_parts) == 4:
+                command_key = topic_parts[3]
+                if payload == command_key:
+                    await command_executor(config, command_key)
 
 
-def on_message(
-    client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage, config: Config
-) -> None:
-    """Callback for when a PUBLISH message is received from the server."""
-    print(f"Received a message on topic: {msg.topic}")
-    topic_parts = msg.topic.split("/")
-    payload = msg.payload.decode()
-
-    if len(topic_parts) == 4:
-        command_key = topic_parts[3]
-        if payload == command_key:
-            command_executor(config, command_key)
-
-
-def main() -> None:
-    """Main function to initialize and run the MQTT client."""
+async def main() -> None:
+    """Main function to setup and run the application."""
     config = Config()
-    client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION1)  # type: ignore
-    client.username_pw_set(
-        config.user or "default_user", config.password or "default_password"
-    )
-    client.on_connect = on_connect
-    # Using a lambda to pass the config object to the on_message callback
-    client.on_message = lambda c, u, m: on_message(c, u, m, config)
+    main_task = asyncio.create_task(mqtt_client_task(config))
 
-    if config.ip != "":
-        client.connect(config.ip, config.port, 60)
-    else:
-        print("MQTT broker IP address or port is not configured properly.")
-        return
+    def signal_handler():
+        print("Caught SIGINT signal, stopping...")
+        main_task.cancel()
 
-    client.loop_forever()
+    loop = asyncio.get_running_loop()
+    loop.add_signal_handler(signal.SIGINT, signal_handler)
+
+    try:
+        await main_task
+    except asyncio.CancelledError:
+        print("Main task cancelled, application shutting down.")
+    finally:
+        print("Cleaning up...")
 
 
-main()
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Application interrupted, exiting...")
