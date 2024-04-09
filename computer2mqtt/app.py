@@ -65,26 +65,36 @@ async def command_executor(config: Config, command_key: str) -> None:
 
 
 async def mqtt_client_task(config: Config):
-    """Task for running the MQTT client and handling messages."""
-    async with aiomqtt.Client(
-        config.ip,
-        username=config.user or "default_user",
-        password=config.password or "default_password",
-        port=config.port,
-    ) as client:
-        await client.subscribe(f"mac2mqtt/{get_hostname()}/command/#")
-        async for message in client.messages:
-            print(f"Received message: {str(message.topic)} => {str(message.payload)}")
-            topic_parts = str(message.topic).split("/")
-            if isinstance(message.payload, bytes):
-                payload = message.payload.decode()
-            else:
-                payload = str(message.payload)
+    """Task for running the MQTT client and handling messages with reconnection logic."""
+    while True:
+        try:
+            async with aiomqtt.Client(
+                config.ip,
+                username=config.user or "default_user",
+                password=config.password or "default_password",
+                port=config.port,
+            ) as client:
+                await client.subscribe(f"mac2mqtt/{get_hostname()}/command/#")
+                async for message in client.messages:
+                    print(
+                        f"Received message: {str(message.topic)} => {str(message.payload)}"
+                    )
+                    topic_parts = str(message.topic).split("/")
+                    if isinstance(message.payload, bytes):
+                        payload = message.payload.decode()
+                    else:
+                        payload = str(message.payload)
 
-            if len(topic_parts) == 4:
-                command_key = topic_parts[3]
-                if payload == command_key:
-                    await command_executor(config, command_key)
+                    if len(topic_parts) == 4:
+                        command_key = topic_parts[3]
+                        if payload == command_key:
+                            await command_executor(config, command_key)
+        except aiomqtt.exceptions.MqttError as e:
+            print(f"MQTT Error: {e}, attempting to reconnect in 10 seconds...")
+            await asyncio.sleep(10)  # Wait for 10 seconds before reconnecting
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            break  # Exit the loop if an unexpected error occurs
 
 
 async def main() -> None:
