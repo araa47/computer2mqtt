@@ -1,14 +1,15 @@
 ---
-name: pre-commit
+name: test
 
 on:
     workflow_call:
 
 jobs:
-    pre-commit:
+    test:
         runs-on: ubuntu-latest
-        env:
-            PIP_DISABLE_PIP_VERSION_CHECK: 1
+        permissions:
+            contents: read
+            id-token: write
         steps:
             - uses: actions/checkout@v4
 
@@ -23,10 +24,5 @@ jobs:
             - name: Install the project
               run: uv sync --all-extras --dev
 
-            - uses: actions/cache@v4
-              with:
-                  path: ~/.cache/pre-commit
-                  key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
-            - name: Run pre-commit
-              run: uv run pre-commit run --show-diff-on-failure --color=always --all-files
+            - name: Run Tests
+              run: uv run pytest

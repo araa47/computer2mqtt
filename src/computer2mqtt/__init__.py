@@ -117,8 +117,12 @@ async def main() -> None:
         print("Cleaning up...")
 
 
+def sync_main():
+    asyncio.run(main())
+
+
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        sync_main()
     except KeyboardInterrupt:
         print("Application interrupted, exiting...")

@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 #config
 computer2mqtt.yaml
+.DS_Store

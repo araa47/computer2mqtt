@@ -1,46 +1,49 @@
-[tool.poetry]
+[project]
 name = "computer2mqtt"
 version = "0.1.0"
-description = ""
-authors = ["Akshay <araa@connect.ust.hk>"]
+description = "This project is a multi-system and multi-OS adaptation of mac2mqtt. It allows you to execute any command on your system, providing endless possibilities for automation and control."
 readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiomqtt>=2.3.0",
+    "pyyaml>=6.0.2",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-pyyaml = "^6.0.1"
-aiomqtt = "^2.0.1"
-
-
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^3.7.0"
-
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6.3",
+    "pre-commit>=3.3.3",
+    "pytest",
+    "pytest-asyncio<0.23",
+    "pytest-cov",
+]
 
 [tool.pyright]
-#TODO: switch to strict mode when we have time to fix all the errors
 typeCheckingMode = "strict"
 venvPath = "."
 venv = ".venv"
-exclude = []
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
 
 [tool.isort]
 profile = "black"
-src_paths = "mac2mqttpy,tests"
+src_paths = "tests"
 line_length = 80
 include_trailing_comma = true
 multi_line_output = 3
 
 [tool.ruff]
-# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
-lint.select = ["E", "F", "B"]
-exclude = ["__pycache__", ".git", ".venv"]
-lint.ignore = [
-  # Note that Ruff and Black treat line-length enforcement a little differently
-  "E501",
-]
+select = ["E", "F", "B"]
+exclude = ["__pycache__", "terraform", ".git", ".venv"]
+ignore = ["E501"]
+
+[project.scripts]
+c2m = "computer2mqtt:sync_main"
 
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

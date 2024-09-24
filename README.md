@@ -2,11 +2,13 @@
 
 This project is a multi-system and multi-OS adaptation of [mac2mqtt](https://github.com/bessarabov/mac2mqtt). It allows you to execute any command on your system, providing endless possibilities for automation and control.
 
-## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
+## Requirements
 
-- You have installed `pyenv` and `direnv`. These tools will help to automatically set up the correct Python environment for running the application.
+This assumes you have [direnv](https://direnv.net/) and [uv](https://github.com/astral-sh/uv) installed
+
+Simply run `direnv allow` to setup the environment, you can read the contents of [.envrc](.envrc) to see what it does behind the scenes.
+
 
 ## Setup
 
@@ -30,7 +32,7 @@ commands:
   displaywake: "caffeinate -u -t 1"
 ```
 
-4. Run `python3 computer2mqtt/app.py` and note down the `Sanitized hostname: Mac-mini`, Mac-mini in this case.
+4. Run `c2m` and note down the `Sanitized hostname: Mac-mini`, Mac-mini in this case.
 5. Set up Home Assistant Scripts to trigger commands. Here is an example from my `scripts.yaml` file in Home Assistant
 
 ```yaml
@@ -58,7 +60,7 @@ Replace {device_name} with the name of your device from the previous step!
 
 To run the script in the background, you can use the screen command. screen is a full-screen window manager that multiplexes a physical terminal between several processes.
 
-1. Start a new screen session with the command screen -S mysession.
-1. Run the script with the command python3 computer2mqtt/app.py.
+1. Start a new screen session with name of your choice with the command `screen -S {mysession}`.
+1. Run the script with the command `c2m`.
 1. Detach from the screen session with the command Ctrl-a d.
-1. You can reattach to the session at any time with the command screen -r mysession. This will keep the script running in the background, even if you close the terminal.
+1. You can reattach to the session at any time with the command `screen -r {mysession}`. This will keep the script running in the background, even if you close the terminal.

@@ -13,3 +13,9 @@ on:
 jobs:
     pre-commit:
         uses: ./.github/workflows/job-pre-commit.yml
+
+    test:
+        uses: ./.github/workflows/job-test.yml
+        permissions:
+            contents: read
+            id-token: write
