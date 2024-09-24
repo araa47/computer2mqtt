@@ -4,7 +4,7 @@ default_language_version:
 default_stages: [commit, push]
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.5.0
+      rev: v4.6.0
       hooks:
           - id: check-executables-have-shebangs
           - id: check-added-large-files
@@ -19,15 +19,12 @@ repos:
       hooks:
           - id: yamllint
             args: [--format, parsable]
-            exclude: ^(kubernetes/downloader/manifest.yaml)$
     - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
       rev: 0.2.3
       hooks:
           - id: yamlfmt
-            exclude: ^(kubernetes/(listener|downloader|legacy_streamer)/manifest\.yaml|\.github/workflows/cron-data-quality\.yml|\.github/workflows/cron-repair\.yml)$
-  # TODO: explore typeCheckingMode="strict" for black
     - repo: https://github.com/psf/black
-      rev: 24.3.0
+      rev: 24.8.0
       hooks:
           - id: black
             language_version: python3
@@ -38,12 +35,12 @@ repos:
           - id: isort
             name: isort (python)
     - repo: https://github.com/RobertCraigie/pyright-python
-      rev: v1.1.350
+      rev: v1.1.381
       hooks:
           - id: pyright
-            entry: poetry run pyright
+            entry: pyright
     - repo: https://github.com/codespell-project/codespell
-      rev: v2.2.6
+      rev: v2.3.0
       hooks:
           - id: codespell
             name: codespell
@@ -53,8 +50,7 @@ repos:
             types: [text]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
-      rev: v0.3.5
+      rev: v0.6.7
       hooks:
           - id: ruff
             args: [--fix, --exit-non-zero-on-fix]
