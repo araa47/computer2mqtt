@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiomqtt>=2.3.0",
+    "click>=8.1.7",
     "pyyaml>=6.0.2",
 ]
 

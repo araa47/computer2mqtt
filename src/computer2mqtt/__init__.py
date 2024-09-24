@@ -6,6 +6,7 @@ import sys
 from typing import TYPE_CHECKING, Any, Dict
 
 import aiomqtt
+import click
 import yaml
 
 if TYPE_CHECKING or (sys.platform.lower() == "win32" or os.name.lower() == "nt"):
@@ -97,9 +98,9 @@ async def mqtt_client_task(config: Config):
             break  # Exit the loop if an unexpected error occurs
 
 
-async def main() -> None:
+async def main(config_path: str) -> None:
     """Main function to setup and run the application."""
-    config = Config()
+    config = Config(config_path)
     main_task = asyncio.create_task(mqtt_client_task(config))
 
     def signal_handler():
@@ -117,12 +118,15 @@ async def main() -> None:
         print("Cleaning up...")
 
 
-def sync_main():
-    asyncio.run(main())
+@click.command()
+@click.option(
+    "--config", default="computer2mqtt.yaml", help="Path to the configuration file."
+)
+def sync_main(config: str):
+    """Synchronously runs the main function with the provided configuration file."""
+    print(f"Using configuration file: {config}")
+    asyncio.run(main(config))
 
 
 if __name__ == "__main__":
-    try:
-        sync_main()
-    except KeyboardInterrupt:
-        print("Application interrupted, exiting...")
+    sync_main()
