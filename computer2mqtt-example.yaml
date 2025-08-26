@@ -6,6 +6,7 @@ mqtt:
     port: 1883
     user: mac_mqtt
     password: mac_mqtt_password
+    hostname: macmini  # This will be used in MQTT topics: mac2mqtt/macmini/command/...
 
 
 commands:

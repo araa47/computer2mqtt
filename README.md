@@ -16,7 +16,7 @@ mqtt:
   port: 1883
   user: username
   password: password
-
+  hostname: macmini  # This will be used in MQTT topics: mac2mqtt/macmini/command/...
 
 commands:
   # Example mac command to wake/sleep display
@@ -24,7 +24,10 @@ commands:
   displaywake: "caffeinate -u -t 1"
 ```
 
-4. Run `uvx computer2mqtt` and note down the `Sanitized hostname: Mac-mini`, Mac-mini in this case.
+4. Run `uvx computer2mqtt` and note down the hostname being used. This will either be:
+   - The `hostname` specified in your `computer2mqtt.yaml` config file, OR
+   - The auto-detected hostname if none is specified in the config
+
 5. Set up Home Assistant Scripts to trigger commands. Here is an example from my `scripts.yaml` file in Home Assistant
 
 ```yaml
@@ -34,7 +37,7 @@ macmini_displaysleep:
   sequence:
     - service: mqtt.publish
       data:
-        topic: "mac2mqtt/{device_name}/command/displaysleep"
+        topic: "mac2mqtt/macmini/command/displaysleep"
         payload: "displaysleep"
 
 macmini_displaywake:
@@ -43,10 +46,10 @@ macmini_displaywake:
   sequence:
     - service: mqtt.publish
       data:
-        topic: "mac2mqtt/{device_name}/command/displaywake"
+        topic: "mac2mqtt/macmini/command/displaywake"
         payload: "displaywake"
 ```
-Replace {device_name} with the name of your device from the previous step!
+Replace `macmini` with the hostname from your configuration or as shown in the application logs!
 
 
 

@@ -1,10 +1,10 @@
 ---
 default_language_version:
     python: python3.12
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.6.0
+      rev: v6.0.0
       hooks:
           - id: check-executables-have-shebangs
           - id: check-added-large-files
@@ -15,7 +15,7 @@ repos:
           - id: mixed-line-ending
           - id: trailing-whitespace
     - repo: https://github.com/adrienverge/yamllint.git
-      rev: v1.35.1
+      rev: v1.37.1
       hooks:
           - id: yamllint
             args: [--format, parsable]
@@ -24,23 +24,23 @@ repos:
       hooks:
           - id: yamlfmt
     - repo: https://github.com/psf/black
-      rev: 24.8.0
+      rev: 25.1.0
       hooks:
           - id: black
             language_version: python3
             args: [-t, py311]
     - repo: https://github.com/pycqa/isort
-      rev: 5.13.2
+      rev: 6.0.1
       hooks:
           - id: isort
             name: isort (python)
     - repo: https://github.com/RobertCraigie/pyright-python
-      rev: v1.1.381
+      rev: v1.1.404
       hooks:
           - id: pyright
             entry: pyright
     - repo: https://github.com/codespell-project/codespell
-      rev: v2.3.0
+      rev: v2.4.1
       hooks:
           - id: codespell
             name: codespell
@@ -50,7 +50,7 @@ repos:
             types: [text]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.6.7
+      rev: v0.12.10
       hooks:
           - id: ruff
             args: [--fix, --exit-non-zero-on-fix]
