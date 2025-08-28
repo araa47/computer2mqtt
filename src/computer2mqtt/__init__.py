@@ -4,11 +4,18 @@ import os
 import re
 import signal
 import sys
+from importlib.metadata import version
 from typing import TYPE_CHECKING, Any, Dict
 
 import aiomqtt
 import click
 import yaml
+
+# Version information
+try:
+    __version__ = version("computer2mqtt")
+except Exception:
+    __version__ = "unknown"
 
 # Configure logging
 logging.basicConfig(
@@ -263,6 +270,7 @@ async def main(config_path: str) -> None:
     help="Logging level (DEBUG, INFO, WARNING, ERROR)",
     type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR"], case_sensitive=False),
 )
+@click.version_option(version=__version__)
 def sync_main(config: str, log_level: str):
     """Synchronously runs the main function with the provided configuration file."""
     # Update logging level based on command line argument
