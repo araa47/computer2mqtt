@@ -1,15 +1,14 @@
 ---
-name: test
+name: prek
 
 on:
     workflow_call:
 
 jobs:
-    test:
+    prek:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            id-token: write
+        env:
+            PIP_DISABLE_PIP_VERSION_CHECK: 1
         steps:
             - uses: actions/checkout@v4
 
@@ -26,5 +25,10 @@ jobs:
             - name: Install the project
               run: uv sync --all-extras --dev
 
-            - name: Run Tests
-              run: uv run pytest
+            - uses: actions/cache@v4
+              with:
+                  path: ~/.cache/prek
+                  key: prek-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+            - name: Run prek
+              run: uv run prek run --show-diff-on-failure --color=always --all-files
