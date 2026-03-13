@@ -20,12 +20,12 @@ Install once, then call the command directly:
 
 This package also exposes an alias command:
 
-- `orm --config computer2mqtt.yaml`
+- `c2m --config computer2mqtt.yaml`
 
 ## Use With `uvx`
 
 - Run latest published version directly: `uvx computer2mqtt --config computer2mqtt.yaml`
-- Run the alias directly: `uvx --from computer2mqtt orm --config computer2mqtt.yaml`
+- Run the alias directly: `uvx --from computer2mqtt c2m --config computer2mqtt.yaml`
 
 ## MQTT Topic Pattern
 
