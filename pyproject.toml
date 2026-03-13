@@ -19,10 +19,6 @@ dev = [
     "pytest-cov",
 ]
 
-release = [
-    "twine",
-]
-
 [tool.pyright]
 typeCheckingMode = "strict"
 venvPath = "."
@@ -47,9 +43,9 @@ ignore = ["E501"]
 
 [project.scripts]
 computer2mqtt = "computer2mqtt:sync_main"
-orm = "computer2mqtt:sync_main"
+c2m = "computer2mqtt:sync_main"
 
 
 [build-system]
-requires = ["hatchling", "twine"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
