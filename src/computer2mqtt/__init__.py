@@ -173,10 +173,7 @@ async def mqtt_client_task(config: Config):
                     logger.info(f"  📝 Payload: {str(message.payload)}")
 
                     topic_parts = str(message.topic).split("/")
-                    if isinstance(message.payload, bytes):
-                        payload = message.payload.decode()
-                    else:
-                        payload = str(message.payload)
+                    payload = message.payload.decode()
 
                     logger.info(f"  🔍 Topic parts: {topic_parts}")
                     logger.info(f"  📦 Decoded payload: '{payload}'")

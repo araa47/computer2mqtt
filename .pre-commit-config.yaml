@@ -4,7 +4,7 @@ default_language_version:
 default_stages: [pre-commit, pre-push]
 repos:
     - repo: https://github.com/astral-sh/uv-pre-commit
-      rev: 0.10.7
+      rev: 0.11.21
       hooks:
           - id: uv-lock
     - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -19,7 +19,7 @@ repos:
           - id: mixed-line-ending
           - id: trailing-whitespace
     - repo: https://github.com/adrienverge/yamllint.git
-      rev: v1.37.1
+      rev: v1.38.0
       hooks:
           - id: yamllint
             args: [--format, parsable]
@@ -28,23 +28,23 @@ repos:
       hooks:
           - id: yamlfmt
     - repo: https://github.com/psf/black
-      rev: 25.1.0
+      rev: 26.5.1
       hooks:
           - id: black
             language_version: python3
             args: [-t, py311]
     - repo: https://github.com/pycqa/isort
-      rev: 6.0.1
+      rev: 8.0.1
       hooks:
           - id: isort
             name: isort (python)
     - repo: https://github.com/RobertCraigie/pyright-python
-      rev: v1.1.404
+      rev: v1.1.410
       hooks:
           - id: pyright
             entry: pyright
     - repo: https://github.com/codespell-project/codespell
-      rev: v2.4.1
+      rev: v2.4.2
       hooks:
           - id: codespell
             name: codespell
@@ -54,7 +54,7 @@ repos:
             types: [text]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: v0.12.10
+      rev: v0.15.17
       hooks:
           - id: ruff
             args: [--fix, --exit-non-zero-on-fix]
