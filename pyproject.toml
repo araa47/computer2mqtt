@@ -5,18 +5,18 @@ description = "This project is a multi-system and multi-OS adaptation of mac2mqt
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "aiomqtt>=2.3.0",
-    "click>=8.1.7",
-    "pyyaml>=6.0.2",
+    "aiomqtt>=2.5.1",
+    "click>=8.5.0",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.6.3",
-    "prek>=0.3.4",
-    "pytest",
-    "pytest-asyncio<0.23",
-    "pytest-cov",
+    "ruff>=0.17.3",
+    "prek>=0.5.9",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.pyright]
@@ -37,8 +37,10 @@ include_trailing_comma = true
 multi_line_output = 3
 
 [tool.ruff]
-select = ["E", "F", "B"]
 exclude = ["__pycache__", "terraform", ".git", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
 ignore = ["E501"]
 
 [project.scripts]
